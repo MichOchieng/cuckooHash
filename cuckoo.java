@@ -36,6 +36,11 @@ public class cuckoo{
         delete(x);
     }
 
+    // Looks for given value in the table and prints position if found
+    public static void lookup(int x){
+        find(x);
+    }
+
     // Initializes hashtables with placeholder values
     private static void inializeTable(){
         for (int i = 0; i < 2; i++) {
@@ -48,7 +53,8 @@ public class cuckoo{
     private static void insert(int x){        
         // Detects an infinite loop and rehashes
         if(loopCount == maxLoop){
-            rehash();    
+            rehash(); 
+            // Inserts the last value from infinite loop into new table   
             insert(x);                  
             return;
         }else{
@@ -124,7 +130,8 @@ public class cuckoo{
     private static void delete(int x){        
         if (table[0][hash0(x)] == -1) {
             // If the address in the first table is empty            
-            System.out.println(x + " Is not in this table");                       
+            System.out.println(x + " Is not in this table"); 
+            System.out.println();                       
         }
         if(table[0][hash0(x)] != -1){
            // If the address is filled check to see if its x            
@@ -135,7 +142,8 @@ public class cuckoo{
            }
            else if (table[1][hash1(x)] == -1){ 
               // If the address in the next table is empty               
-              System.out.println(x + " Is not in this table");               
+              System.out.println(x + " Is not in this table");
+              System.out.println();               
            }
            else if(table[1][hash1(x)] != -1){           
                table[1][hash1(x)] = -1;
@@ -143,6 +151,27 @@ public class cuckoo{
                printTable();                            
            }
         }        
+    }
+
+    private static void find(int x){       
+        if(table[0][hash0(x)] != -1){
+        //    Checks to see if x is at its hashed adress in the first table           
+           if(table[0][hash0(x)] == x){                
+               System.out.println(x + " is in table 1 at position " + hash0(x));
+               printTable();                            
+           }           
+        }
+        if(table[1][hash1(x)] != -1){       
+        //    Checks to see if x is at its hashed adress in the second table                
+           if(table[1][hash1(x)] == x){                         
+             System.out.println(x + " is in table 2 at position " + hash1(x));
+             printTable();                             
+            }
+        }
+        else{
+            System.out.println(x + " Is not in this table");
+        }
+                
     }
     // Hash for first table
     private static int hash0(int x){        
