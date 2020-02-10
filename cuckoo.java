@@ -19,6 +19,8 @@ public class cuckoo{
         inializeTable();        
     }   
 
+    // -----Public methods
+
     // Allows outside classes to use insert method
     public static void add(int x){
         // Checks to see if there are too many values
@@ -28,6 +30,10 @@ public class cuckoo{
             rehash();
             insert(x);
         }
+    }
+    // Looks for given value in the table and deletes it if found
+    public static void evict(int x){
+        delete(x);
     }
 
     // Initializes hashtables with placeholder values
@@ -89,7 +95,7 @@ public class cuckoo{
                 // If its full save the value there, replace and restart with the temp variable
                 int temp2= table[1][hash1(temp)];
                 table[1][hash1(temp)] = temp;                
-                             
+                rehashInsert(temp2);             
             }
         }
     }
@@ -115,6 +121,29 @@ public class cuckoo{
         
     }   
 
+    private static void delete(int x){        
+        if (table[0][hash0(x)] == -1) {
+            // If the address in the first table is empty            
+            System.out.println(x + " Is not in this table");                       
+        }
+        if(table[0][hash0(x)] != -1){
+           // If the address is filled check to see if its x            
+           if(table[0][hash0(x)] == x){
+               table[0][hash0(x)] = -1;  
+               System.out.println(x + " was deleted.");
+               printTable();                            
+           }
+           else if (table[1][hash1(x)] == -1){ 
+              // If the address in the next table is empty               
+              System.out.println(x + " Is not in this table");               
+           }
+           else if(table[1][hash1(x)] != -1){           
+               table[1][hash1(x)] = -1;
+               System.out.println(x + " was deleted.");
+               printTable();                            
+           }
+        }        
+    }
     // Hash for first table
     private static int hash0(int x){        
         return x%(size*sizeMultiplier);
